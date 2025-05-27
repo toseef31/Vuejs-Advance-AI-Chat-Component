@@ -1,0 +1,74 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.main-container {
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  /* display: flex;
+  justify-content: center;
+  align-items: end; */
+  overflow-y: auto;
+}
+
+.input-area {
+  padding: 12px;
+  width: 800px;
+  max-width: 800px;
+  min-height: 100px;
+  border-radius: 16px !important;
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.text-area {
+  font-size: 16px;
+  padding: 4px 10px;
+  line-height: 20px;
+  width: 100%;
+  border-radius: 8px;
+  min-height: 50px;
+  border: none;
+  background-color: transparent;
+}
+
+.text-area:focus-visible {
+  outline: none;
+}
+.input-area .p-card-body {
+  padding: 0px;
+}
+
+.input-area .p-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@media only screen and (max-width: 576px) {
+  .input-area {
+    width: 95%;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .input-area {
+    width: 80%;
+  }
+}
+
+@media only screen and (min-width: 992px) {
+  .input-area {
+    width: 95%;
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .input-area {
+    width: 100%;
+  }
+}

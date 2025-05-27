@@ -23,10 +23,3 @@ defineProps({
 
 defineEmits(['click']);
 </script>
-
-<style scoped>
-.testing {
-  background: red !important;
-  font-size: 30px;
-}
-</style>
