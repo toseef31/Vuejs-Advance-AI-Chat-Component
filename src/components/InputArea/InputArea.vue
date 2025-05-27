@@ -21,7 +21,7 @@ watch(inputText, (val) => {
       <TextInput v-model="inputText" />
     </template>
     <template #footer>
-      <div>some text here: {{ inputText }}</div>
+      <div></div>
       <SendButton icon="pi pi-send" />
     </template>
   </Card>
