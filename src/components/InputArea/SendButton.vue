@@ -1,8 +1,6 @@
 <template>
-  <div>
-    <CustomButton icon="pi pi-send" varient="text" ariaLabel="Send" severity="contrast" type="submit"
-      :class="[customClass]" :disabled="disabled" @click="$emit('click', $event)" />
-  </div>
+  <CustomButton icon="pi pi-send" varient="text" ariaLabel="Send" severity="contrast" type="submit"
+    :class="[customClass]" :disabled="disabled" @click="$emit('click', $event)" />
 </template>
 
 <script setup lang="ts">
