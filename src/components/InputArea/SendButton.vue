@@ -1,6 +1,6 @@
 <template>
-  <CustomButton icon="pi pi-send" varient="text" ariaLabel="Send" severity="contrast" type="submit"
-    :class="[customClass]" :disabled="disabled" @click="$emit('click', $event)" />
+  <CustomButton icon="pi pi-send" variant="text" ariaLabel="Send" severity="contrast" type="submit"
+    :class="[customClass]" :disabled="disabled" />
 </template>
 
 <script setup lang="ts">
@@ -10,6 +10,4 @@ defineProps({
   disabled: { type: Boolean, default: false },
   customClass: { type: String, default: '' },
 });
-
-defineEmits(['click']);
 </script>

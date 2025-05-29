@@ -1,34 +1,36 @@
 <script setup lang="ts">
-
 import { ref, watch, nextTick, onMounted } from 'vue'
-import { Textarea } from 'primevue';
+import { Textarea } from 'primevue'
 
 const props = defineProps<{ modelValue: string }>()
-const emit = defineEmits<{ (e: 'update:modelValue', value: string): void }>()
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: string): void
+  (e: 'submit'): void
+}>()
 
 const value = ref(props.modelValue)
 const textareaRef = ref<any>(null)
 
 const autoResize = async () => {
   await nextTick()
-  const componentRef = textareaRef.value
-  if (!componentRef) return
-
-  const el = componentRef.$el as HTMLTextAreaElement
+  const el = textareaRef.value?.$el as HTMLTextAreaElement
   if (!el) return
-
   el.style.height = 'auto'
   el.style.height = Math.min(el.scrollHeight, 200) + 'px'
 }
 
 const handleInput = () => {
-  const componentRef = textareaRef.value
-  if (componentRef) {
-    const el = componentRef.$el as HTMLTextAreaElement
-    if (el) {
-      emit('update:modelValue', el.value)
-      autoResize()
-    }
+  const el = textareaRef.value?.$el as HTMLTextAreaElement
+  if (el) {
+    emit('update:modelValue', el.value)
+    autoResize()
+  }
+}
+
+const handleKeydown = (event: KeyboardEvent) => {
+  if (event.key === 'Enter' && !event.shiftKey) {
+    event.preventDefault()
+    emit('submit')
   }
 }
 
@@ -43,9 +45,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <Textarea ref="textareaRef" v-model="value" rows="1" class="text-area" @input="handleInput" placeholder="Write..." />
+  <Textarea ref="textareaRef" v-model="value" rows="1" class="text-area" @input="handleInput" @keydown="handleKeydown"
+    placeholder="Write..." />
 </template>
-
 <style>
 .p-textarea {
   font-size: 30px;

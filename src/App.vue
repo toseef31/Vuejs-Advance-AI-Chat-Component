@@ -1,20 +1,22 @@
 <script setup lang="ts">
 import InputArea from './components/InputArea/InputArea.vue';
 import { Badge } from 'primevue';
+import { useSessionStore } from '@/stores/sessionStore'
+
+const store = useSessionStore()
 </script>
 
 <template>
   <div class="main-container">
     <div class="inner-container">
       <div class="message-container">
-        <div class="message-list" v-for="i in 20" :key="i">
-          <div class="user-message">
-            <Badge value="Lorem ipsum dolor sit amet consectetur." severity="secondary" class="send-message" />
+        <div v-for="(msg, index) in store.messages" :key="index" class="message-list">
+          <div v-if="msg.sender === 'user'" class="user-message">
+            <Badge :value="msg.text" severity="secondary" class="send-message" />
           </div>
-          <div class="reply-message">
-            <Badge value="Lorem ipsum dolor sit amet consectetur." severity="secondary" class="send-message" />
+          <div v-else class="reply-message">
+            <Badge :value="msg.text" severity="info" class="send-message" />
           </div>
-
         </div>
       </div>
       <div class="input-area">
