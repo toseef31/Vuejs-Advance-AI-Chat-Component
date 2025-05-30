@@ -12,10 +12,10 @@ const store = useSessionStore()
       <div class="message-container">
         <div v-for="(msg, index) in store.messages" :key="index" class="message-list">
           <div v-if="msg.sender === 'user'" class="user-message">
-            <Badge :value="msg.text" severity="secondary" class="send-message" />
+            <Badge :value="msg.content" severity="secondary" class="send-message" />
           </div>
           <div v-else class="reply-message">
-            <Badge :value="msg.text" severity="info" class="send-message" />
+            <Badge :value="msg.content" severity="info" class="send-message" />
           </div>
         </div>
       </div>
