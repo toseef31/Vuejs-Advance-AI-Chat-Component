@@ -31,7 +31,7 @@ export const connectWebSocket = ({
       content: `Welcome back! Session ID: **${sessionId}**`,
       timestamp: new Date().toISOString(),
     });
-  }, 800);
+  }, 5000);
 };
 
 export const sendMessage = (msg: { content: string }) => {
