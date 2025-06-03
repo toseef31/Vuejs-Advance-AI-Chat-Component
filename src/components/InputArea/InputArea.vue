@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { Card } from "primevue";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import TextInput from "@/components/InputArea/TextInput.vue";
 import SendButton from "@/components/InputArea/SendButton.vue";
 import { useSessionStore } from "@/stores/sessionStore";
 import { connectWebSocket, sendMessage as wsSend } from "@/services/webSocketService.ts";
 import type { ChatMessage } from "@/stores/sessionStore";
+import { Button } from "primevue";
 
 const inputText = ref("");
 const store = useSessionStore();
@@ -44,6 +45,14 @@ onMounted(() => {
     },
   });
 });
+const varient = computed(() => {
+  if (store.showReasoning) {
+    return ''
+  } else {
+
+    return 'outlined'
+  }
+})
 </script>
 
 <template>
@@ -53,7 +62,7 @@ onMounted(() => {
         <TextInput v-model="inputText" @submit="onSubmit" />
       </template>
       <template #footer>
-        <div></div>
+        <div><Button :variant="varient" size="small" rounded @click="store.toggleShowReasoning">Reasoning</Button></div>
         <SendButton icon="pi pi-send" type="submit" />
       </template>
     </Card>

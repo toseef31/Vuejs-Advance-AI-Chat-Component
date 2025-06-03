@@ -47,5 +47,9 @@ export const useSessionStore = defineStore("session", {
       this.sessionId = "";
       this.clearMessages();
     },
+    toggleShowReasoning() {
+      console.log("is it calling???")
+      this.showReasoning = !this.showReasoning;
+    }
   },
 });

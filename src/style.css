@@ -39,8 +39,8 @@
 }
 
 .input-area {
-  width: 800px;
-  max-width: 100%;
+  /* width: 800px;
+  max-width: 100%; */
   min-height: 100px;
   padding: 6px;
   margin-top: 8px;

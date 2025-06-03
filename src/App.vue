@@ -1,13 +1,17 @@
 <script setup lang="ts">
-import InputArea from './components/InputArea/InputArea.vue';
-import { Badge } from 'primevue';
-import { useSessionStore } from '@/stores/sessionStore'
+// import InputArea from './components/InputArea/InputArea.vue';
+// import { Badge } from 'primevue';
+// import { useSessionStore } from '@/stores/sessionStore'
 
-const store = useSessionStore()
+// const store = useSessionStore()
+import WrapperComponent from "@/components/WrapperComponent.vue";
 </script>
 
 <template>
-  <div class="main-container">
+  <div class="w-screen h-screen overflow-hidden dark:bg-[#292A2D] bg-white">
+    <WrapperComponent />
+  </div>
+  <!-- <div class="main-container">
     <div class="inner-container">
       <div class="message-container">
         <div v-for="(msg, index) in store.messages" :key="index" class="message-list">
@@ -23,26 +27,26 @@ const store = useSessionStore()
         <InputArea />
       </div>
     </div>
-  </div>
+  </div> -->
 </template>
 
 
 
 <style scoped>
-.user-message {
+/* .user-message {
   margin-left: auto;
   max-width: 80%;
   display: flex;
   justify-content: end;
   align-items: center;
   margin-bottom: 10px;
-}
+} */
 
-.reply-message {
+/* .reply-message {
   max-width: 80%;
   display: flex;
   justify-content: start;
   align-items: center;
   margin-bottom: 10px;
-}
+} */
 </style>
