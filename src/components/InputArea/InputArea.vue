@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { Card } from "primevue";
-import { ref, onMounted, computed } from "vue";
+// computed
+import { ref, onMounted, } from "vue";
 import TextInput from "@/components/InputArea/TextInput.vue";
 import SendButton from "@/components/InputArea/SendButton.vue";
 import { useSessionStore } from "@/stores/sessionStore";
 import { connectWebSocket, sendCommand } from "@/services/webSocketService.ts";
-import { Button } from "primevue";
+// import { Button } from "primevue";
 
 const inputText = ref("");
 const store = useSessionStore();
@@ -51,9 +52,9 @@ onMounted(() => {
   });
 });
 
-const varient = computed(() => {
-  return store.showReasoning ? "" : "outlined";
-});
+// const varient = computed(() => {
+//   return store.showReasoning ? "" : "outlined";
+// });
 </script>
 
 <template>
@@ -63,11 +64,11 @@ const varient = computed(() => {
         <TextInput v-model="inputText" @submit="onSubmit" />
       </template>
       <template #footer>
-        <div>
+        <!-- <div>
           <Button :variant="varient" size="small" rounded @click="store.toggleShowReasoning">
             Reasoning
           </Button>
-        </div>
+        </div> -->
         <SendButton icon="pi pi-send" :disabled="inputText === '' || !store.isConnected" type="submit" />
       </template>
     </Card>
