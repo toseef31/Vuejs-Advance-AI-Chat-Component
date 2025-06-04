@@ -4,8 +4,7 @@ import { ref, onMounted, computed } from "vue";
 import TextInput from "@/components/InputArea/TextInput.vue";
 import SendButton from "@/components/InputArea/SendButton.vue";
 import { useSessionStore } from "@/stores/sessionStore";
-import { connectWebSocket, sendMessage as wsSend } from "@/services/webSocketService.ts";
-import type { ChatMessage } from "@/stores/sessionStore";
+import { connectWebSocket, sendCommand } from "@/services/webSocketService.ts";
 import { Button } from "primevue";
 
 const inputText = ref("");
@@ -13,18 +12,18 @@ const store = useSessionStore();
 
 const onSubmit = () => {
   const trimmed = inputText.value.trim();
-  if (!trimmed) return;
+  if (!trimmed || !store.isConnected) return;
 
-  if (!store.isConnected) return;
+  // Add user message using store method
+  store.addUserMessage(trimmed);
 
-  const userMessage: Omit<ChatMessage, "id" | "timestamp"> = {
-    sender: "user",
-    type: "user_input",
-    content: trimmed,
-  };
-
-  store.addMessage(userMessage);
-  wsSend({ content: trimmed });
+  // Send command to mock WebSocket
+  sendCommand({
+    command: "send_message",
+    sessionId: store.sessionId,
+    timestamp: new Date().toISOString(),
+    data: { content: trimmed }
+  });
 
   inputText.value = "";
 };
@@ -33,32 +32,28 @@ onMounted(() => {
   store.initSession();
 
   connectWebSocket({
-    sessionId: store.sessionId,
-    onInit(info) {
-      console.log("WebSocket initialized:", info);
-    },
-    onMessage(msg) {
-      store.addMessage({
-        sender: "server",
-        type: msg.type,
-        format: msg.format,
-        content: msg.content,
-      });
-    },
+    // onMessage(messages) {
+    //   // store.addServerMessages(messages);
+    // },
     onStatusChange(status) {
       store.setConnectionStatus(status);
-      store.setConnected(status === "connected");
     },
+    debugPanelEnabled: true,
+    authEnabled: false,
+  });
+
+  // Optional: send session initialization if needed
+  sendCommand({
+    command: "initialize_session",
+    timestamp: new Date().toISOString(),
+    sessionId: store.sessionId,
+    data: {},
   });
 });
-const varient = computed(() => {
-  if (store.showReasoning) {
-    return ''
-  } else {
 
-    return 'outlined'
-  }
-})
+const varient = computed(() => {
+  return store.showReasoning ? "" : "outlined";
+});
 </script>
 
 <template>
@@ -68,11 +63,13 @@ const varient = computed(() => {
         <TextInput v-model="inputText" @submit="onSubmit" />
       </template>
       <template #footer>
-        <div><Button :variant="varient" size="small" rounded @click="store.toggleShowReasoning">Reasoning</Button></div>
+        <div>
+          <Button :variant="varient" size="small" rounded @click="store.toggleShowReasoning">
+            Reasoning
+          </Button>
+        </div>
         <SendButton icon="pi pi-send" :disabled="inputText === '' || !store.isConnected" type="submit" />
       </template>
     </Card>
   </form>
 </template>
-
-<style scoped></style>

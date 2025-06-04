@@ -25,7 +25,6 @@ export type Command = {
   data: any;
 };
 
-// Signal structure
 export type Signal = {
   signal: string;
   sessionId: string;
@@ -61,14 +60,14 @@ export const useSessionStore = defineStore("session", {
   },
 
   actions: {
-    addMessage(msg: Omit<ChatMessage, "id">) {
+    addMessage(msg: Omit<ChatMessage, "id" | "timestamp">) {
       this.messages.push({
-        id: msg.id || crypto.randomUUID(),
+        id: crypto.randomUUID(),
+        timestamp: new Date().toISOString(),
         ...msg,
       });
     },
 
-    // Add user message
     addUserMessage(text: string, file?: { name: string; type: string; content: string }) {
       const message: ChatMessage = {
         id: crypto.randomUUID(),
@@ -85,7 +84,6 @@ export const useSessionStore = defineStore("session", {
 
     addServerMessages(messages: ChatMessage[]) {
       messages.forEach(msg => {
-        // Ensure message has all required fields
         const completeMessage: ChatMessage = {
           ...msg,
           sessionId: msg.sessionId || this.sessionId,
@@ -116,24 +114,23 @@ export const useSessionStore = defineStore("session", {
     },
 
     initSession(sessionIdKey = "terminal_session_id") {
-      const existing = localStorage.getItem(sessionIdKey);
-      if (existing) {
-        console.log("Session restored from localStorage:", existing);
-        this.sessionId = existing;
-      } else {
-        console.log("No existing session found");
-        this.sessionId = "";
+      if (typeof window !== "undefined") {
+        const existing = localStorage.getItem(sessionIdKey);
+        this.sessionId = existing || "";
       }
     },
 
     setSessionId(sessionId: string, sessionIdKey = "terminal_session_id") {
       this.sessionId = sessionId;
-      localStorage.setItem(sessionIdKey, sessionId);
-      console.log("Session ID saved:", sessionId);
+      if (typeof window !== "undefined") {
+        localStorage.setItem(sessionIdKey, sessionId);
+      }
     },
 
     endSession(sessionIdKey = "terminal_session_id") {
-      localStorage.removeItem(sessionIdKey);
+      if (typeof window !== "undefined") {
+        localStorage.removeItem(sessionIdKey);
+      }
       this.sessionId = "";
       this.setConnected(false);
       this.isProcessing = false;
@@ -143,7 +140,9 @@ export const useSessionStore = defineStore("session", {
     },
 
     expireSession(sessionIdKey = "terminal_session_id") {
-      localStorage.removeItem(sessionIdKey);
+      if (typeof window !== "undefined") {
+        localStorage.removeItem(sessionIdKey);
+      }
       this.sessionId = "";
       this.setConnected(false);
       this.isProcessing = false;
@@ -152,7 +151,6 @@ export const useSessionStore = defineStore("session", {
 
     restoreSession(sessionId: string) {
       this.sessionId = sessionId;
-      console.log("Session restored:", sessionId);
     },
 
     setProcessing(isProcessing: boolean) {
@@ -204,7 +202,7 @@ export const useSessionStore = defineStore("session", {
 
     createCommand(command: Command["command"], data: any = {}): Command {
       return {
-        command: command as any,
+        command,
         sessionId: this.sessionId,
         timestamp: new Date().toISOString(),
         data,
