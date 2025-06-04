@@ -15,6 +15,8 @@ const onSubmit = () => {
   const trimmed = inputText.value.trim();
   if (!trimmed) return;
 
+  if (!store.isConnected) return;
+
   const userMessage: Omit<ChatMessage, "id" | "timestamp"> = {
     sender: "user",
     type: "user_input",
@@ -43,6 +45,10 @@ onMounted(() => {
         content: msg.content,
       });
     },
+    onStatusChange(status) {
+      store.setConnectionStatus(status);
+      store.setConnected(status === "connected");
+    },
   });
 });
 const varient = computed(() => {
@@ -63,7 +69,7 @@ const varient = computed(() => {
       </template>
       <template #footer>
         <div><Button :variant="varient" size="small" rounded @click="store.toggleShowReasoning">Reasoning</Button></div>
-        <SendButton icon="pi pi-send" type="submit" />
+        <SendButton icon="pi pi-send" :disabled="inputText === '' || !store.isConnected" type="submit" />
       </template>
     </Card>
   </form>

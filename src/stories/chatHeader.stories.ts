@@ -6,7 +6,6 @@ const meta: Meta<typeof ChatHeader> = {
   component: ChatHeader,
   argTypes: {
     title: { control: 'text' },
-    isConnected: { control: 'boolean' }
   },
 }
 
@@ -18,7 +17,6 @@ type Story = StoryObj<typeof ChatHeader>
 
 export const Connected: Story = {
   args: {
-    isConnected: true,
     title: 'Here is title of the chat component'
   },
 }
