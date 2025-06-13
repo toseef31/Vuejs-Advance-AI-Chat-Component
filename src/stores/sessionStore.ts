@@ -1,4 +1,6 @@
 import { defineStore } from "pinia";
+import { useHistoryStore } from './historyStore';
+import { v4 as uuidv4 } from 'uuid';
 
 export type ChatMessage = {
   id: string;
@@ -80,6 +82,15 @@ export const useSessionStore = defineStore("session", {
         },
       };
       this.messages.push(message);
+
+      const userMessages = this.messages.filter(m => m.type === 'user_message');
+
+      if (userMessages.length >= 10) {
+        const historyStore = useHistoryStore();
+        historyStore.addSession(this.sessionId, this.messages);
+        this.setLimitExceeded();
+        this.expireSession();
+      }
     },
 
     addServerMessages(messages: ChatMessage[]) {
@@ -146,7 +157,7 @@ export const useSessionStore = defineStore("session", {
       this.sessionId = "";
       this.setConnected(false);
       this.isProcessing = false;
-      this.clearMessages();
+      // this.clearMessages();
     },
 
     restoreSession(sessionId: string) {
@@ -208,75 +219,22 @@ export const useSessionStore = defineStore("session", {
         data,
       };
     },
+    resumeSession(sessionId?: string) {
+      const historyStore = useHistoryStore();
+
+      // Add current session to history if it has messages
+      if (this.sessionId && this.messages.length > 0) {
+        historyStore.addSession(this.sessionId, this.messages);
+      }
+
+      this.clearMessages();
+      this.clearLimitExceeded();
+
+      this.sessionId = sessionId || uuidv4();
+
+      if (typeof window !== "undefined") {
+        localStorage.setItem("terminal_session_id", this.sessionId);
+      }
+    }
   },
 });
-// import { defineStore } from "pinia";
-
-// export type ChatMessage = {
-//   id: string;
-//   sender: "user" | "server";
-//   type: string;
-//   format?: string;
-//   content: any;
-//   timestamp: string;
-// };
-
-// export const useSessionStore = defineStore("session", {
-//   state: () => ({
-//     messages: [] as ChatMessage[],
-//     sessionId: "",
-//     isConnected: false,
-//     connectionStatus: "disconnected" as "connecting" | "connected" | "disconnected",
-//     showReasoning: false,
-//     debugPanelEnabled: false,
-//     sessionInitMessage: "",
-//   }),
-//   getters: {
-//     userMessages: (state) => state.messages.filter(m => m.sender === "user"),
-//     serverMessages: (state) => state.messages.filter(m => m.sender === "server"),
-//     reasoningMessages: (state) => state.messages.filter(m => m.type === "reasoning"),
-//     debugMessages: (state) => state.messages.filter(m => m.type === "debug"),
-//   },
-//   actions: {
-//     addMessage(msg: Omit<ChatMessage, "id" | "timestamp">) {
-//       this.messages.push({
-//         id: crypto.randomUUID(),
-//         timestamp: new Date().toISOString(),
-//         ...msg,
-//       });
-//     },
-//     clearMessages() {
-//       this.messages = [];
-//     },
-//     setConnected(status: boolean) {
-//       this.isConnected = status;
-//       this.connectionStatus = status ? "connected" : "disconnected";
-//     },
-//     setConnectionStatus(status: "connecting" | "connected" | "disconnected") {
-//       this.connectionStatus = status;
-//     },
-//     initSession(sessionIdKey = "sessionId") {
-//       let existing = localStorage.getItem(sessionIdKey);
-//       if (!existing) {
-//         existing = crypto.randomUUID();
-//         localStorage.setItem(sessionIdKey, existing);
-//         console.log("New session ID created:", existing);
-//       } else {
-//         console.log("Session restored:", existing);
-//       }
-//       this.sessionId = existing;
-//     },
-//     endSession(sessionIdKey = "sessionId") {
-//       localStorage.removeItem(sessionIdKey);
-//       this.sessionId = "";
-//       this.clearMessages();
-//       this.setConnected(false);
-//     },
-//     toggleShowReasoning() {
-//       this.showReasoning = !this.showReasoning;
-//     },
-//     setSessionInitMessage(msg: string) {
-//       this.sessionInitMessage = msg;
-//     },
-//   },
-// });

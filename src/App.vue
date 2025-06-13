@@ -4,12 +4,11 @@
 // import { useSessionStore } from '@/stores/sessionStore'
 
 // const store = useSessionStore()
-import WrapperComponent from "@/components/WrapperComponent.vue";
 </script>
 
 <template>
   <div class="w-screen h-screen overflow-hidden dark:bg-[#292A2D] bg-white">
-    <WrapperComponent />
+    <router-view></router-view>
   </div>
   <!-- <div class="main-container">
     <div class="inner-container">

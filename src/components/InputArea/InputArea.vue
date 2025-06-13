@@ -124,7 +124,8 @@ const removeAttachment = () => {
         <input ref="fileInput" type="file" accept="image/*,.pdf,.doc,.docx,.txt" @change="handleFileChange"
           style="display: none" />
         <CustomButton icon="pi pi-plus" severity="secondary" type="button" @click="attachFile" />
-        <SendButton icon="pi pi-send" :disabled="(!inputText.trim() && !selectedFile) || !store.isConnected"
+        <SendButton icon="pi pi-send"
+          :disabled="(!inputText.trim() && !selectedFile) || !store.isConnected || store.limitExceeded"
           type=" submit" />
       </template>
     </Card>
