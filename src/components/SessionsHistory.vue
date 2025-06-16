@@ -1,5 +1,13 @@
 <template>
   <div class="flex justify-center item-center flex-col w-full h-full">
+    <div v-if="getSessionData.length === 0" class="mx-auto text-center">
+      <div>
+        There is no chat data available for now.
+      </div>
+      <router-link to="/">
+        <badge class="cursor-pointer">Start new chat</badge>
+      </router-link>
+    </div>
     <div class="md:w-3/4 lg:w-3/2 xl:w-1/2 mx-auto" v-for="item in getSessionData" :key="item.id">
       <div class="rounded-md cursor-pointer border border-white mb-2 p-2" @click="openSession(item.listId)">
         <p class="font-semibold capitalize">{{ item.content.text }}</p>
@@ -12,6 +20,7 @@
 <script setup lang="ts">
 import { useHistoryStore } from '@/stores/historyStore';
 import { useSessionStore } from '@/stores/sessionStore';
+import { Badge } from 'primevue';
 import { computed } from 'vue';
 import { useRouter } from 'vue-router'
 
