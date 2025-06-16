@@ -1,10 +1,9 @@
 <template>
   <div class="flex justify-center item-center flex-col w-full h-full">
     <div class="md:w-3/4 lg:w-3/2 xl:w-1/2 mx-auto" v-for="item in getSessionData" :key="item.id">
-      <div class="border border-white mb-2 p-2" @click="openSession(item.listId)">
-        <p>{{ item.listId }}</p>
-        <p>{{ item.content.text }}</p>
-        <p>{{ item.timestamp }}</p>
+      <div class="rounded-md cursor-pointer border border-white mb-2 p-2" @click="openSession(item.listId)">
+        <p class="font-semibold capitalize">{{ item.content.text }}</p>
+        <p>{{ formatedDate(item.timestamp) }}</p>
       </div>
     </div>
   </div>
@@ -28,6 +27,18 @@ const getSessionData = computed(() => {
   })
   return sessionsData
 })
+
+const formatedDate = (d: string) => {
+  const date = new Date(d);
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+
+  return `${hours}:${minutes}:${seconds} --- ${day}-${month}-${year}`;
+};
 
 function openSession(sessionId: string) {
   const messages = historyStore.getMessagesBySession(sessionId)
