@@ -1,8 +1,8 @@
 <template>
   <div class="flex justify-center item-center flex-col w-full h-full">
     <div class="md:w-3/4 lg:w-3/2 xl:w-1/2 mx-auto" v-for="item in getSessionData" :key="item.id">
-      <div class="border border-white mb-2 p-2" @click="openSession(item.id)">
-        <p>{{ item.id }}</p>
+      <div class="border border-white mb-2 p-2" @click="openSession(item.listId)">
+        <p>{{ item.listId }}</p>
         <p>{{ item.content.text }}</p>
         <p>{{ item.timestamp }}</p>
       </div>
@@ -24,15 +24,13 @@ const getSessionData = computed(() => {
   const sessionList = historyStore.getAllSessionIds()
   const sessionsData = sessionList.map(list => {
     const dataItem = historyStore.getMessagesBySession(list)
-    return dataItem[0];
+    return { ...dataItem[0], listId: list };
   })
-  console.log(sessionsData)
   return sessionsData
 })
 
 function openSession(sessionId: string) {
   const messages = historyStore.getMessagesBySession(sessionId)
-  console.log("", messages)
   sessionStore.clearMessages()
   sessionStore.restoreSession(sessionId)
   sessionStore.addServerMessages(messages)

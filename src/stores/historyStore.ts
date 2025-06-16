@@ -9,7 +9,6 @@ export const useHistoryStore = defineStore("history", {
   actions: {
     addSession(sessionId: string, messages: ChatMessage[]) {
       if (!sessionId || messages.length === 0) return;
-      console.log("[historyStore] Adding session:", sessionId);
       this.sessions[sessionId] = [...messages];
     },
 

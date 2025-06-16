@@ -34,7 +34,7 @@ export const getMockResponse = (msg: { content: string }): ChatMessage[] => {
                 {
                   title: "Card One",
                   description: "First card description",
-                  image: "https://via.placeholder.com/300x200",
+                  image: "https://picsum.photos/400/300?random=1",
                   buttons: [
                     { text: "View", payload: "view_1" },
                     { text: "Select", payload: "select_1" },
@@ -43,7 +43,7 @@ export const getMockResponse = (msg: { content: string }): ChatMessage[] => {
                 {
                   title: "Card Two",
                   description: "Second card description",
-                  image: "https://via.placeholder.com/300x200",
+                  image: "https://picsum.photos/400/300?random=2",
                   buttons: [
                     { text: "Details", payload: "details_2" },
                     { text: "Choose", payload: "choose_2" },

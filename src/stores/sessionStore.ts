@@ -83,11 +83,11 @@ export const useSessionStore = defineStore("session", {
       };
       this.messages.push(message);
 
-      const userMessages = this.messages.filter(m => m.type === 'user_message');
+      const historyStore = useHistoryStore();
+      historyStore.addSession(this.sessionId, this.messages);
 
+      const userMessages = this.messages.filter(m => m.type === 'user_message');
       if (userMessages.length >= 10) {
-        const historyStore = useHistoryStore();
-        historyStore.addSession(this.sessionId, this.messages);
         this.setLimitExceeded();
         this.expireSession();
       }
@@ -222,11 +222,6 @@ export const useSessionStore = defineStore("session", {
     resumeSession(sessionId?: string) {
       const historyStore = useHistoryStore();
 
-      // Add current session to history if it has messages
-      if (this.sessionId && this.messages.length > 0) {
-        historyStore.addSession(this.sessionId, this.messages);
-      }
-
       this.clearMessages();
       this.clearLimitExceeded();
 
@@ -235,6 +230,9 @@ export const useSessionStore = defineStore("session", {
       if (typeof window !== "undefined") {
         localStorage.setItem("terminal_session_id", this.sessionId);
       }
+
+      const previousMessages = historyStore.getMessagesBySession(this.sessionId);
+      this.addServerMessages(previousMessages);
     }
   },
 });

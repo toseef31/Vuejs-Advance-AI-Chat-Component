@@ -19,10 +19,6 @@
         <p class="text-red-500 mt-2">
           You've reaced the session limit. Please start chat in a new session.
         </p>
-        <!-- {{ store.sessionInitMessage }} -->
-        <!-- <Badge @click="startNewChat" class="cursor-pointer">New session</Badge> -->
-
-        <!-- {{ historyStore.getAllSessionIds() }} -->
       </div>
     </template>
   </Card>
@@ -61,7 +57,7 @@ const startNewChat = () => {
   }
   router.push({ name: 'home', })
   store.endSession();
-  store.resumeSession();
+  store.resumeSession(store.sessionId);
   store.setConnected(true);
 };
 </script>

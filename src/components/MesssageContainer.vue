@@ -33,11 +33,28 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watch, nextTick } from 'vue'
+import { useRoute } from 'vue-router'
 import { useSessionStore } from '@/stores/sessionStore'
-import UserMessage from '@/components/UserMessage.vue';
+import UserMessage from '@/components/UserMessage.vue'
+import { useHistoryStore } from '@/stores/historyStore'
 
+const route = useRoute()
 const store = useSessionStore()
 const scrollAnchor = ref<HTMLElement | null>(null)
+
+watch(
+  () => route.params.id,
+  (newId) => {
+    if (typeof newId === 'string') {
+      const historyStore = useHistoryStore()
+      const messages = historyStore.getMessagesBySession(newId)
+      store.clearMessages()
+      store.restoreSession(newId)
+      store.addServerMessages(messages)
+    }
+  },
+  { immediate: true }
+)
 
 watch(() => store.messages.length, async () => {
   await nextTick()
