@@ -9,9 +9,7 @@
           <Badge size="small" :severity="badgeSeverity">
             {{ store.connectionStatus }}
           </Badge>
-          <Badge size="small" severity="secondary">
-            <RouterLink to="/history">History</RouterLink>
-          </Badge>
+          <Badge @click="visitHistory" size="small" severity="secondary" class="cursor-pointer">History</Badge>
           <Badge @click="startNewChat" size="small" severity="info" class="cursor-pointer">New session</Badge>
         </div>
       </div>
@@ -52,12 +50,21 @@ const badgeSeverity = computed(() => {
 });
 
 const startNewChat = () => {
+  useCommon();
+  router.push({ name: 'home', })
+};
+
+const visitHistory = () => {
+  useCommon();
+  router.push({ name: 'history', })
+}
+
+const useCommon = () => {
   if (store.sessionId && store.messages.length > 0) {
     historyStore.addSession(store.sessionId, store.messages);
   }
-  router.push({ name: 'home', })
   store.endSession();
   store.resumeSession(store.sessionId);
   store.setConnected(true);
-};
+}
 </script>

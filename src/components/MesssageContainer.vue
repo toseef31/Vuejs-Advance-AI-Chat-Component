@@ -12,13 +12,17 @@
           </div>
         </div>
       </div>
-      <div v-if="msg.type === 'response'" class="reply-message">
+      <div v-if="msg.content.format === 'json' && isCarousel(msg.content.body ?? '')">
+        <CarouselMessage :items="parseCarouselItems(msg.content.body ?? '')" />
+      </div>
+      <div v-if="msg.type === 'response' && msg.content.format === 'markdown'" class="reply-message">
+        <Markdown :source="msg.content.text ?? ''" />
+      </div>
+
+      <div v-else-if="msg.type === 'response'" class="reply-message">
         <div class="text-base px-2 dark:text-slate-100 my-2">
           {{ msg.content.text }}
         </div>
-      </div>
-      <div v-if="msg.content.format === 'json' && isCarousel(msg.content.body ?? '')">
-        <CarouselMessage :items="parseCarouselItems(msg.content.body ?? '')" />
       </div>
       <div v-if="msg.type === 'debug'">
         Debug data will display here.
@@ -39,6 +43,8 @@ import UserMessage from '@/components/UserMessage.vue'
 import { useHistoryStore } from '@/stores/historyStore'
 import CarouselMessage from '@/components/CarouselMessage.vue'
 import ReasoningPanel from '@/components/ReasoningPanel.vue'
+// @ts-ignore
+import Markdown from 'vue3-markdown-it';
 
 const route = useRoute()
 const store = useSessionStore()

@@ -54,6 +54,7 @@ function openSession(sessionId: string) {
   sessionStore.clearMessages()
   sessionStore.restoreSession(sessionId)
   sessionStore.addServerMessages(messages)
+  localStorage.setItem("terminal_session_id", sessionId)
 
   router.push({ name: 'chat', params: { id: sessionId } })
 }

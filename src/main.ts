@@ -5,6 +5,7 @@ import 'primeicons/primeicons.css';
 import './style.css'
 import { createPinia } from 'pinia';
 import router from './router'
+// import MarkdownIt from 'markdown-it';
 
 import App from './App.vue'
 
@@ -17,5 +18,6 @@ app.use(PrimeVue, {
   }
 })
 app.use(pinia);
-app.use(router)
+app.use(router);
+// app.use(MarkdownIt)
 app.mount('#app')

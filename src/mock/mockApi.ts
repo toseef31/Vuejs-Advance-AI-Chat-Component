@@ -93,6 +93,18 @@ export const getMockResponse = (msg: { content: string }): ChatMessage[] => {
     );
     return responses;
   }
+  if (input.includes("markdown")) {
+    responses.push(
+      createMessage(
+        "response",
+        {
+          text: `**Hello!** This is a _markdown_ **formatted** reply.\n\n- Item 1\n- Item 2\n\n[Visit Google](https://google.com)`
+        },
+        "markdown"
+      )
+    )
+    return responses
+  }
 
   // Default mock response
   responses.push(createMessage("response", { text: "This is a mock agent reply." }));
