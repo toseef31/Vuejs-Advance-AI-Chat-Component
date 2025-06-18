@@ -1,8 +1,10 @@
 import type { ChatMessage } from "@/stores/sessionStore";
+import { useSessionStore } from "@/stores/sessionStore";
 
 export const getMockResponse = (msg: { content: string }): ChatMessage[] => {
   const sessionId = `mock-session-${Date.now()}`;
   const responses: ChatMessage[] = [];
+  const sessoinStore = useSessionStore()
 
   const createMessage = (
     type: "response" | "debug" | "reasoning",
@@ -23,6 +25,7 @@ export const getMockResponse = (msg: { content: string }): ChatMessage[] => {
   const input = msg.content.toLowerCase();
 
   if (input.includes("carousel")) {
+    const getRandomImage = () => `https://picsum.photos/400/300?random=${Math.floor(Math.random() * 10000)}`;
     responses.push(
       createMessage(
         "response",
@@ -34,20 +37,12 @@ export const getMockResponse = (msg: { content: string }): ChatMessage[] => {
                 {
                   title: "Card One",
                   description: "First card description",
-                  image: "https://picsum.photos/400/300?random=1",
-                  buttons: [
-                    { text: "View", payload: "view_1" },
-                    { text: "Select", payload: "select_1" },
-                  ],
+                  img: getRandomImage(),
                 },
                 {
                   title: "Card Two",
                   description: "Second card description",
-                  image: "https://picsum.photos/400/300?random=2",
-                  buttons: [
-                    { text: "Details", payload: "details_2" },
-                    { text: "Choose", payload: "choose_2" },
-                  ],
+                  img: getRandomImage(),
                 },
               ],
             },
@@ -85,11 +80,11 @@ export const getMockResponse = (msg: { content: string }): ChatMessage[] => {
     return responses;
   }
 
-  if (input.includes("reasoning")) {
+  if (input.includes("reasoning") && sessoinStore.showReasoning) {
     responses.push(
       createMessage("reasoning", { body: "This is a reasoning trace for the agent's decision-making." })
     );
-    return responses;
+    // return responses;
   }
 
   if (input.includes("debug")) {

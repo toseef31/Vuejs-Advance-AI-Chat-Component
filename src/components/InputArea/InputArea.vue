@@ -121,9 +121,13 @@ const removeAttachment = () => {
         <TextInput v-model="inputText" @submit="onSubmit" />
       </template>
       <template #footer>
-        <input ref="fileInput" type="file" accept="image/*,.pdf,.doc,.docx,.txt" @change="handleFileChange"
-          style="display: none" />
-        <CustomButton icon="pi pi-plus" severity="secondary" type="button" @click="attachFile" />
+        <div>
+          <input ref="fileInput" type="file" accept="image/*,.pdf,.doc,.docx,.txt" @change="handleFileChange"
+            style="display: none" />
+          <CustomButton icon="pi pi-plus" severity="secondary" type="button" @click="attachFile" />
+          <div class="inline-block border border-[1px] rounded-md ml-2 px-3 cursor-pointer"
+            :class="{ 'bg-green-500': store.showReasoning }" @click="store.toggleShowReasoning">Reasoning</div>
+        </div>
         <SendButton icon="pi pi-send"
           :disabled="(!inputText.trim() && !selectedFile) || !store.isConnected || store.limitExceeded"
           type=" submit" />

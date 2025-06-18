@@ -17,14 +17,14 @@
           {{ msg.content.text }}
         </div>
       </div>
-      <div v-if="msg.content.format === 'json'">
-        carousel data will display here.
+      <div v-if="msg.content.format === 'json' && isCarousel(msg.content.body ?? '')">
+        <CarouselMessage :items="parseCarouselItems(msg.content.body ?? '')" />
       </div>
       <div v-if="msg.type === 'debug'">
         Debug data will display here.
       </div>
       <div v-if="msg.type === 'reasoning'">
-        Reasoning data will display here.
+        <ReasoningPanel :message="msg.content.body" />
       </div>
     </div>
     <div ref="scrollAnchor"></div>
@@ -37,10 +37,18 @@ import { useRoute } from 'vue-router'
 import { useSessionStore } from '@/stores/sessionStore'
 import UserMessage from '@/components/UserMessage.vue'
 import { useHistoryStore } from '@/stores/historyStore'
+import CarouselMessage from '@/components/CarouselMessage.vue'
+import ReasoningPanel from '@/components/ReasoningPanel.vue'
 
 const route = useRoute()
 const store = useSessionStore()
 const scrollAnchor = ref<HTMLElement | null>(null)
+
+interface CarouselItem {
+  title: string;
+  description: string;
+  img: string;
+}
 
 watch(
   () => route.params.id,
@@ -64,4 +72,29 @@ watch(() => store.messages.length, async () => {
 onMounted(() => {
   scrollAnchor.value?.scrollIntoView({ behavior: 'auto' })
 })
+
+function isCarousel(jsonBody: string): boolean {
+  try {
+    const parsed = JSON.parse(jsonBody);
+    return parsed?.type === "carousel" && Array.isArray(parsed.cards);
+  } catch {
+    return false;
+  }
+}
+
+function parseCarouselItems(jsonBody: string): CarouselItem[] {
+  try {
+    const parsed = JSON.parse(jsonBody);
+    if (parsed?.type === "carousel" && Array.isArray(parsed.cards)) {
+      return parsed.cards.filter((card: CarouselItem) =>
+        typeof card.title === "string" &&
+        typeof card.description === "string" &&
+        typeof card.img === "string"
+      );
+    }
+  } catch (err) {
+    console.warn("Failed to parse carousel JSON:", err);
+  }
+  return [];
+}
 </script>
