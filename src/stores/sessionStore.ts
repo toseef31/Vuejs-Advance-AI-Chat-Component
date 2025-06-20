@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
-import { useHistoryStore } from './historyStore';
+import { useHistoryStore } from '@/stores/historyStore';
+import { sendSignal } from "@/services/webSocketService";
 import { v4 as uuidv4 } from 'uuid';
 
 export type ChatMessage = {
@@ -233,6 +234,12 @@ export const useSessionStore = defineStore("session", {
 
       const previousMessages = historyStore.getMessagesBySession(this.sessionId);
       this.addServerMessages(previousMessages);
+
+      sendSignal({
+        signal: "session_restored",
+        sessionId: this.sessionId,
+        timestamp: new Date().toISOString(),
+      });
     }
   },
 });

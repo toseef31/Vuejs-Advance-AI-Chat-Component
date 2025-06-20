@@ -106,8 +106,8 @@ const removeAttachment = () => {
   <form @submit.prevent="onSubmit">
     <Card class="input-area">
       <template #content>
-        <input ref="fileInput" type="file" accept="image/*,.pdf,.doc,.docx,.txt" @change="handleFileChange"
-          style="display: none" />
+        <!-- <input ref="fileInput" type="file" accept="image/*,.pdf,.doc,.docx,.txt" @change="handleFileChange"
+          style="display: none" /> -->
 
         <div v-if="selectedFile" class="mb-1">
           <div class="relative inline-block max-w-32 p-2">

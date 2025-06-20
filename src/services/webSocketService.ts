@@ -100,3 +100,10 @@ export const sendCommand = (command: Command) => {
     store.setSessionId(command.sessionId || `mock-session-${Date.now()}`);
   }
 };
+
+export const sendSignal = (signal: Signal) => {
+  const store = useSessionStore();
+  onSignalCallback?.(signal);
+  console.log("Signal sent:", signal);
+  console.log("Store:", store);
+};
