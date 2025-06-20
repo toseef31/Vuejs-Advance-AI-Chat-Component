@@ -15,7 +15,7 @@
       </div>
       <div class="flex justify-between mt-3" v-if="store.limitExceeded">
         <p class="text-red-500 mt-2">
-          You've reaced the session limit. Please start chat in a new session.
+          You've reached the session limit. Please start chat in a new session.
         </p>
       </div>
     </template>
